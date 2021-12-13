@@ -1,0 +1,146 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+#=====================================================================#
+# Input Block
+#=====================================================================#
+# Parameters:
+
+#=====================================================================#
+# Resource Block
+#=====================================================================#
+Resources:
+  #================================================================#
+  # PetAPI Resource
+  #================================================================#
+  #----------------------------------------------#
+  # IAM Policy for PetAPI Lambda
+  #----------------------------------------------#
+  ApiServiceIAMPolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      Roles:
+        - !Ref ApiServiceIAMRole
+      PolicyName: ApiServiceIAMPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/ApiServiceLambdaFunction:*
+
+  #----------------------------------------------#
+  # IAM Role for PetAPI Lambda
+  #----------------------------------------------#
+  ApiServiceIAMRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: ApiServiceIAMRole
+      AssumeRolePolicyDocument: |-
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Effect": "Allow",
+              "Sid": ""
+            }
+          ]
+        }
+
+  #----------------------------------------------#
+  # PetAPI Lambda LogGroup
+  #----------------------------------------------#
+  ApiServiceLambdaLogGr:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/ApiServiceLambdaFunction
+      RetentionInDays: 7
+
+  #----------------------------------------------#
+  # PetAPI Lambda Function
+  #----------------------------------------------#
+  ApiServiceLambdaFunction:
+    DependsOn:
+      - ApiServiceLambdaLogGr
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: ApiServiceLambdaFunction
+      Runtime: "python3.6"
+      Handler: "lambda.handler"
+      Role: !GetAtt ApiServiceIAMRole.Arn
+      Code:
+        S3Bucket: !Sub ${AWS::StackName}-${AWS::AccountId}-${AWS::Region}-lambdas
+        S3Key: "pets-api.zip"
+
+  #----------------------------------------------#
+  # PetAPI Lambda Permission
+  #----------------------------------------------#
+  ApiServiceLambdaFunctionPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ApiServiceLambdaFunction.Arn
+      Principal: "apigateway.amazonaws.com"
+
+  #================================================================#
+  # API Gateway Resource
+  #================================================================#
+  #----------------------------------------------#
+  # Create API Gateway with RestApi type
+  #----------------------------------------------#
+  ApiGatewayRestApi:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      Name: "MyApiGateway"
+
+  #----------------------------------------------#
+  # Create API Gateway Resource
+  #----------------------------------------------#
+  ApiGatewayResource:
+    Type: "AWS::ApiGateway::Resource"
+    Properties:
+      RestApiId: !Ref ApiGatewayRestApi
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: "{api+}"
+
+  #----------------------------------------------#
+  # Create API Gateway Method
+  #----------------------------------------------#
+  ApiGatewayMethod:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      HttpMethod: "ANY"
+      ResourceId: !Ref ApiGatewayResource
+      RestApiId: !Ref ApiGatewayRestApi
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: "POST"
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiServiceLambdaFunction.Arn}/invocations
+
+  #----------------------------------------------#
+  # Deploy API Gateway
+  #----------------------------------------------#
+  ApiGatewayDeploymentUnProtected:
+    DependsOn:
+      - ApiGatewayMethod
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref ApiGatewayRestApi
+      StageName: dev
+      Description: unprotected api
+
+#=====================================================================#
+# Output Block
+#=====================================================================#
+Outputs:
+  ApiGatewayDeploymentUrlApiEndpoint:
+    Value: !Sub https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/dev/petstore/v1/pets
+  ApiGatewayDeploymentUrlApiEndpointV2:
+    Value: !Sub https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/dev/petstore/v2/pets
