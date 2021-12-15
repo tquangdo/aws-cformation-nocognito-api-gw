@@ -1,4 +1,4 @@
-# cformation-cognito-api-gw 🐳
+# cformation-cognito-api-gw (without Authorizer cognito) 🐳
 
 ![Stars](https://img.shields.io/github/stars/tquangdo/cformation-cognito-api-gw?color=f05340)
 ![Issues](https://img.shields.io/github/issues/tquangdo/cformation-cognito-api-gw?color=f05340)
@@ -9,7 +9,7 @@
 + must name CFormation's stack name = "cognito-api-gateway"
 ![stackname](screenshots/stackname.png)
 
-## A/ không có Authorizer: reference
+## reference
 [vtiblog](https://vtitech.vn/authorization-su-dung-amazon-cognito-api-gateway-va-iam-phan-1/)
 
 ## flow
