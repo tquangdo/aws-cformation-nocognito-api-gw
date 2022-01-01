@@ -67,4 +67,25 @@ echo "${API_URL}"
 https://0i3lyilnqj.execute-api.us-east-1.amazonaws.com/dev/petstore/v2/pets
 ```
 ### 6/ run API
+＋ result get from `Lambda/pets-api/lambda.py`
+```py
+pets = [
+    {
+        "id": 1,
+        "name": "Birds"
+    },
+    {
+        "id": 2,
+        "name": "Cats"
+    },
+    {
+        "id": 3,
+        "name": "Dogs"
+    },
+    {
+        "id": 4,
+        "name": "Fish"
+    }
+]
+```
 ![getapi](screenshots/getapi.png)
