@@ -1,9 +1,9 @@
-# cformation-cognito-api-gw (without Authorizer cognito) 🐳
+# aws-cformation-nocognito-api-gw (without Authorizer cognito) 🐳
 
-![Stars](https://img.shields.io/github/stars/tquangdo/cformation-cognito-api-gw?color=f05340)
-![Issues](https://img.shields.io/github/issues/tquangdo/cformation-cognito-api-gw?color=f05340)
-![Forks](https://img.shields.io/github/forks/tquangdo/cformation-cognito-api-gw?color=f05340)
-[![Report an issue](https://img.shields.io/badge/Support-Issues-green)](https://github.com/tquangdo/cformation-cognito-api-gw/issues/new)
+![Stars](https://img.shields.io/github/stars/tquangdo/aws-cformation-nocognito-api-gw?color=f05340)
+![Issues](https://img.shields.io/github/issues/tquangdo/aws-cformation-nocognito-api-gw?color=f05340)
+![Forks](https://img.shields.io/github/forks/tquangdo/aws-cformation-nocognito-api-gw?color=f05340)
+[![Report an issue](https://img.shields.io/badge/Support-Issues-green)](https://github.com/tquangdo/aws-cformation-nocognito-api-gw/issues/new)
 
 ## note
 + must name CFormation's stack name = "cognito-api-gateway"
