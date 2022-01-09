@@ -5,6 +5,8 @@
 ![Forks](https://img.shields.io/github/forks/tquangdo/aws-cformation-nocognito-api-gw?color=f05340)
 [![Report an issue](https://img.shields.io/badge/Support-Issues-green)](https://github.com/tquangdo/aws-cformation-nocognito-api-gw/issues/new)
 
+![overview](screenshots/overview.png)
+
 ## note
 + must name CFormation's stack name = "cognito-api-gateway"
 ![stackname](screenshots/stackname.png)
@@ -24,14 +26,14 @@ aws s3api create-bucket \
       --bucket ${S3_BUCKET_NAME} \
       --region us-east-1
 {
-    "Location": "/cognito-api-gateway-462123133781-us-east-1-lambdas"
+    "Location": "/cognito-api-gateway-<acc ID>-us-east-1-lambdas"
 }
 ```
 ### 2/ Upload source lên S3
 ```shell
 aws s3 cp ./cf-lambdas/pets-api.zip s3://$S3_BUCKET_NAME
 =>
-upload: cf-lambdas/pets-api.zip to s3://cognito-api-gateway-462123133781-us-east-1-lambdas/pets-api.zip
+upload: cf-lambdas/pets-api.zip to s3://cognito-api-gateway-<acc ID>-us-east-1-lambdas/pets-api.zip
 ```
 ### 3/ CFormation: create stack
 + create stack > new resources (standard) > import "api-resource.yaml" > create
