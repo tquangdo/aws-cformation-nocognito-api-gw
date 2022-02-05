@@ -33,15 +33,14 @@ upload: cf-lambdas/pets-api.zip to s3://cognito-api-gateway-<acc ID>-us-east-1-l
 ```
 ### 3/ CFormation: create stack
 #### 3-1) manual
-+ create stack > new resources (standard) > import "api-resource.yaml" > create
++ create stack > new resources (standard) > import `infrastructure/api-resource.yaml` > create
 ![CFormation](screenshots/CFormation.png)
-### 3-2) AWS CLI
+#### 3-2) AWS CLI
 ```shell
 shell$ ./3_2_create_cformation.sh
 =>
 Uploading to cfn/b6ba0579a3a635f89be8ffad052a9b70.template  5032 / 5032.0  (100.00%)
 Waiting for changeset to be created..
-No changes to deploy. Stack cognito-api-gateway is up to date
 ```
 ### 4/ Tiến hành test API đã được tạo ra
 ```shell
